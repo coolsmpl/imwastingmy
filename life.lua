@@ -11,13 +11,14 @@ local ANIMATION_IDS = {
 }
 
 local RISE_HEIGHT = 5 -- Height above the spawn point
+local PLAYER_NAME = "amazinglly994" -- Replace with your actual Roblox username
 
 -- Functions
 local function findNonSittingPlayers()
     local players = game.Players:GetPlayers()
     local nonSittingPlayers = {}
     for _, player in ipairs(players) do
-        if not player.Character.Humanoid.Sit then
+        if player.Name ~= PLAYER_NAME and not player.Character.Humanoid.Sit then
             table.insert(nonSittingPlayers, player)
         end
     end
