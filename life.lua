@@ -1,6 +1,6 @@
 -- Constants
 local FLING_FORCE = 10000 -- Adjust as needed
-local SPIN_SPEED = 9e9 -- Adjust as needed
+local SPIN_SPEED = 100 -- Adjust as needed (reduce the range)
 local ANIMATION_IDS = {
     3333499508, 3695333486, 3333136415, 3338042785, 4940561610,
     4940564896, 4841399916, 4641985101, 4555782893, 4265725525,
@@ -11,14 +11,13 @@ local ANIMATION_IDS = {
 }
 
 local RISE_HEIGHT = 5 -- Height above the spawn point
-local PLAYER_NAME = "amazinglly994" -- Replace with your actual Roblox username
 
 -- Functions
 local function findNonSittingPlayers()
     local players = game.Players:GetPlayers()
     local nonSittingPlayers = {}
     for _, player in ipairs(players) do
-        if player.Name ~= PLAYER_NAME and not player.Character.Humanoid.Sit then
+        if player ~= game.Players.LocalPlayer and not player.Character.Humanoid.Sit then
             table.insert(nonSittingPlayers, player)
         end
     end
@@ -27,14 +26,16 @@ end
 
 local function flingPlayer(player)
     local character = player.Character
-    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        humanoid:ChangeState(Enum.HumanoidStateType.Physics)
-        local rootPart = character:FindFirstChild("HumanoidRootPart")
-        if rootPart then
-            local flingVector = Vector3.new(0, FLING_FORCE, 0)
-            rootPart.Velocity = flingVector
-            rootPart.RotVelocity = Vector3.new(math.random(-SPIN_SPEED, SPIN_SPEED), math.random(-SPIN_SPEED, SPIN_SPEED), math.random(-SPIN_SPEED, SPIN_SPEED))
+    if character then
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                local flingVector = Vector3.new(0, FLING_FORCE, 0)
+                rootPart.Velocity = flingVector
+                rootPart.RotVelocity = Vector3.new(math.random(-SPIN_SPEED, SPIN_SPEED), math.random(-SPIN_SPEED, SPIN_SPEED), math.random(-SPIN_SPEED, SPIN_SPEED))
+            end
         end
     end
 end
