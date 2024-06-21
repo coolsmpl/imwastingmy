@@ -7,7 +7,7 @@ local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
-local delayTime = 118 -- Adjust the delay time (in seconds) as needed
+local delayTime = 90 -- Adjust the delay time (in seconds) as needed
 local DiscordWebhookURL = "" -- Add your webhook URL here
 
 local BlacklistedPlayers = {}
@@ -174,6 +174,9 @@ local function hop()
     end
 end
 
+-- Automatically server hop after 90 seconds
+task.delay(90, hop)
+
 -- Dance animations
 local animations = {3333499508, 3695333486, 3333136415, 3338042785, 4940561610, 4940564896, 4841399916, 4641985101, 4555782893, 4265725525, 3338097973, 3333432454, 3333387824, 4406555273, 4212455378, 4049037604, 3695300085, 3695322025, 5915648917, 5915714366, 5918726674, 5917459365, 5915712534, 5915713518, 5937558680, 5918728267, 5937560570, 507776043, 507777268, 507771019}
 local randomDance = animations[math.random(1, #animations)]
@@ -297,11 +300,3 @@ local function spam()
 end
 
 coroutine.wrap(spam)()
-
--- Automatic server hop after certain iterations
-for i = 1, 10 do
-    if i == 10 then
-        Players.LocalPlayer:Kick("\n")
-        hop()
-    end
-end
