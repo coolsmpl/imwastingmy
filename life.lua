@@ -1,5 +1,5 @@
 -- Constants
-local FLING_FORCE = 9e9 -- Adjust as needed
+local FLING_FORCE = 10000 -- Adjust as needed
 local SPIN_SPEED = 9e9 -- Adjust as needed
 local ANIMATION_IDS = {
     3333499508, 3695333486, 3333136415, 3338042785, 4940561610,
