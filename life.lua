@@ -10,6 +10,8 @@ local ANIMATION_IDS = {
     5918728267, 5937560570, 507776043, 507777268, 507771019
 }
 
+local RISE_HEIGHT = 5 -- Height above the spawn point
+
 -- Functions
 local function findNonSittingPlayers()
     local players = game.Players:GetPlayers()
@@ -44,31 +46,17 @@ local function playRandomAnimation()
     end
 end
 
--- Kick and server hop function
-local function kickAndServerHop()
-    print("Kicking and server hopping...")
-    game.Players.LocalPlayer:Kick("Automatic kick and server hop")
-    game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, game.Players.LocalPlayer)
-end
-
 -- Main loop
-local startTime = tick() -- Get the initial time
 while true do
-    local elapsedTime = tick() - startTime
-    if elapsedTime >= 120 then
-        kickAndServerHop()
-        break -- Exit the loop after kicking and server hopping
-    end
-
     local nonSittingPlayers = findNonSittingPlayers()
     if #nonSittingPlayers > 0 then
         for _, player in ipairs(nonSittingPlayers) do
             flingPlayer(player)
         end
     else
-        -- If no non-sitting players, rise above spawn and play random animations
+        -- If no non-sitting players, teleport script.Parent to rise above spawn point
         local spawnPoint = game.Workspace:WaitForChild("SpawnPoint") -- Adjust to your spawn point name
-        script.Parent.CFrame = spawnPoint.CFrame + Vector3.new(0, 20, 0) -- Adjust the height as needed
+        script.Parent.CFrame = spawnPoint.CFrame + Vector3.new(0, RISE_HEIGHT, 0) -- Adjust the height as needed
         playRandomAnimation()
     end
     wait(1) -- Adjust the interval as needed
