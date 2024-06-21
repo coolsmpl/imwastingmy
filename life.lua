@@ -1,6 +1,6 @@
 -- Constants
 local FLING_FORCE = 10000 -- Adjust as needed
-local SPIN_SPEED = 100 -- Adjust as needed (reduce the range)
+local SPIN_SPEED = 100 -- Adjust as needed (reduce the range if needed)
 local ANIMATION_IDS = {
     3333499508, 3695333486, 3333136415, 3338042785, 4940561610,
     4940564896, 4841399916, 4641985101, 4555782893, 4265725525,
@@ -34,17 +34,25 @@ local function flingPlayer(player)
             if rootPart then
                 local flingVector = Vector3.new(0, FLING_FORCE, 0)
                 rootPart.Velocity = flingVector
-                rootPart.RotVelocity = Vector3.new(math.random(-SPIN_SPEED, SPIN_SPEED), math.random(-SPIN_SPEED, SPIN_SPEED), math.random(-SPIN_SPEED, SPIN_SPEED))
+                -- Adjust spin speed calculation to ensure it's within a positive range
+                rootPart.RotVelocity = Vector3.new(
+                    math.random(-SPIN_SPEED, SPIN_SPEED),
+                    math.random(-SPIN_SPEED, SPIN_SPEED),
+                    math.random(-SPIN_SPEED, SPIN_SPEED)
+                )
             end
         end
     end
 end
 
 local function playRandomAnimation()
-    local randomAnimationId = ANIMATION_IDS[math.random(1, #ANIMATION_IDS)]
-    if randomAnimationId then
-        humanoid.AnimationId = "rbxassetid://" .. randomAnimationId
-        humanoid:PlayAnimation(humanoid.AnimationId)
+    local humanoid = script.Parent:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        local randomAnimationId = ANIMATION_IDS[math.random(1, #ANIMATION_IDS)]
+        if randomAnimationId then
+            humanoid.AnimationId = "rbxassetid://" .. randomAnimationId
+            humanoid:PlayAnimation(humanoid.AnimationId)
+        end
     end
 end
 
