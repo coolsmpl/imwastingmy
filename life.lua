@@ -1,73 +1,47 @@
--- Constants
-local FLING_FORCE = 10000 -- Adjust as needed
-local SPIN_SPEED = 100 -- Adjust as needed (reduce the range if needed)
-local ANIMATION_IDS = {
-    3333499508, 3695333486, 3333136415, 3338042785, 4940561610,
-    4940564896, 4841399916, 4641985101, 4555782893, 4265725525,
-    3338097973, 3333432454, 3333387824, 4406555273, 4212455378,
-    4049037604, 3695300085, 3695322025, 5915648917, 5915714366,
-    5918726674, 5917459365, 5915712534, 5915713518, 5937558680,
-    5918728267, 5937560570, 507776043, 507777268, 507771019
-}
+-- Define the interval in seconds for both fling and message
+local interval = 7
+local riseHeight = 3  -- Height above spawn point in studs
 
-local RISE_HEIGHT = 5 -- Height above the spawn point
-
--- Functions
-local function findNonSittingPlayers()
+-- Function to fling all players and rise above spawn point
+local function flingEveryone()
+    -- Get all players in the game
     local players = game.Players:GetPlayers()
-    local nonSittingPlayers = {}
-    for _, player in ipairs(players) do
-        if player ~= game.Players.LocalPlayer and not player.Character.Humanoid.Sit then
-            table.insert(nonSittingPlayers, player)
-        end
-    end
-    return nonSittingPlayers
-end
 
-local function flingPlayer(player)
-    local character = player.Character
-    if character then
-        local humanoid = character:FindFirstChildOfClass("Humanoid")
-        if humanoid then
-            humanoid:ChangeState(Enum.HumanoidStateType.Physics)
-            local rootPart = character:FindFirstChild("HumanoidRootPart")
-            if rootPart then
-                local flingVector = Vector3.new(0, FLING_FORCE, 0)
-                rootPart.Velocity = flingVector
-                -- Adjust spin speed calculation to ensure it's within a positive range
-                rootPart.RotVelocity = Vector3.new(
-                    math.random(-SPIN_SPEED, SPIN_SPEED),
-                    math.random(-SPIN_SPEED, SPIN_SPEED),
-                    math.random(-SPIN_SPEED, SPIN_SPEED)
-                )
+    -- Iterate through each player and fling them
+    for _, player in ipairs(players) do
+        local character = player.Character
+        if character then
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                -- Get player's spawn position
+                local spawnPosition = player.Character.HumanoidRootPart.Position
+                local newPosition = spawnPosition + Vector3.new(0, riseHeight, 0)
+                
+                -- Teleport player above spawn point
+                humanoidRootPart.CFrame = CFrame.new(newPosition)
+                
+                -- Apply a force to fling the player
+                local flingForce = Vector3.new(0, 9e9, 0)  -- Very large force
+                humanoidRootPart.Velocity = flingForce
             end
         end
     end
 end
 
-local function playRandomAnimation()
-    local humanoid = script.Parent:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        local randomAnimationId = ANIMATION_IDS[math.random(1, #ANIMATION_IDS)]
-        if randomAnimationId then
-            humanoid.AnimationId = "rbxassetid://" .. randomAnimationId
-            humanoid:PlayAnimation(humanoid.AnimationId)
-        end
+-- Function to send a message to all players
+local function sendMessage()
+    -- Get all players in the game
+    local players = game.Players:GetPlayers()
+
+    -- Iterate through each player and send them a message
+    for _, player in ipairs(players) do
+        game:GetService("Chat"):Chat(player.Character or player, "this code was made by c2vp on ds | add me")
     end
 end
 
--- Main loop
+-- Infinite loop to perform actions every interval
 while true do
-    local nonSittingPlayers = findNonSittingPlayers()
-    if #nonSittingPlayers > 0 then
-        for _, player in ipairs(nonSittingPlayers) do
-            flingPlayer(player)
-        end
-    else
-        -- If no non-sitting players, teleport script.Parent to rise above spawn point
-        local spawnPoint = game.Workspace:WaitForChild("SpawnPoint") -- Adjust to your spawn point name
-        script.Parent.CFrame = spawnPoint.CFrame + Vector3.new(0, RISE_HEIGHT, 0) -- Adjust the height as needed
-        playRandomAnimation()
-    end
-    wait(1) -- Adjust the interval as needed
+    flingEveryone()
+    sendMessage()
+    wait(interval)
 end
